@@ -1,0 +1,10 @@
+boto3
+flask
+flask-cors
+gunicorn
+moto[dynamodb]
+pytest
+pytest-playwright
+python-dotenv
+ruff
+setuptools

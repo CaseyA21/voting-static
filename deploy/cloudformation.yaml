@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  Voting API on a single EC2 instance with a security group for SSH and HTTP.
+  The template does not create the website bucket. User data downloads
+  deploy/userdata.sh from your GitHub fork and runs it (edit REPO_URL there
+  and push before creating the stack).
+
+Parameters:
+  GitHubUsername:
+    Type: String
+    Description: >-
+      Your GitHub username. The stack downloads
+      https://raw.githubusercontent.com/<username>/voting-static/main/deploy/userdata.sh
+      Push your REPO_URL edit to main before you create the stack.
+    AllowedPattern: "^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$"
+    ConstraintDescription: A GitHub username (letters, numbers, hyphens).
+
+Resources:
+  WebSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Voting API - SSH and HTTP
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+          Description: SSH
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          Description: HTTP
+      Tags:
+        - Key: Name
+          Value: voting-static-web
+
+  VotingInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      # Current Amazon Linux 2023 AMI in this region (x86_64).
+      ImageId: "{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64}}"
+      InstanceType: t3.micro
+      KeyName: vockey
+      SecurityGroupIds:
+        - !GetAtt WebSecurityGroup.GroupId
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          set -euo pipefail
+          curl -fsSL "https://raw.githubusercontent.com/${GitHubUsername}/voting-static/main/deploy/userdata.sh" \
+            -o /tmp/voting-userdata.sh
+          bash /tmp/voting-userdata.sh
+      Tags:
+        - Key: Name
+          Value: voting-static
+
+Outputs:
+  PublicIP:
+    Description: Public IPv4 address of the instance
+    Value: !GetAtt VotingInstance.PublicIp

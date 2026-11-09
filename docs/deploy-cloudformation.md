@@ -85,20 +85,7 @@ Or SSH with your Academy key and check `/var/log/cloud-init-output.log` if somet
 
 If you use an Elastic IP for the semester, **associate it** with this instance in the EC2 console (or with the CLI) after the instance exists, then use that address instead of the ephemeral public IP.
 
-
-## Upload the pages
-
-In `ui/config.js`, replace `YOUR_DNS_NAME` with your hostname. Leave `http://` in place.
-
-From the project root:
-
-```bash
-aws s3 sync ui/ s3://voting-static-<username> --region us-east-1 --delete
-```
-
-Replace `<username>` with the name you gave the bucket. Open the bucket website endpoint.
-
-Run the same command after you change a page. It does not restart the API.
+Upload the pages as described in [Deploy the pages](deploy-s3.md).
 
 
 ## Delete the stack

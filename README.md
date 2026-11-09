@@ -20,8 +20,9 @@ See the **specs** repository for the product specifications (use cases, API, dat
 | Doc | Contents |
 |-----|----------|
 | [Development setup](docs/development.md) | Virtualenv, install, unit tests, lint, `.env`, DynamoDB Local, run the API and the pages, acceptance tests |
-| [Deploy on EC2](docs/deploy-ec2.md) | Website bucket, user data, systemd, debugging |
+| [Deploy on EC2](docs/deploy-ec2.md) | User data, systemd, debugging |
 | [Deploy with CloudFormation](docs/deploy-cloudformation.md) | CLI: create stack from `deploy/cloudformation.yaml` |
+| [Deploy the pages](docs/deploy-s3.md) | Set `DEPLOY_URL` and upload `ui/` to the website bucket |
 | [Design](docs/design.md) | Pages and the API, layers, data types |
 
 

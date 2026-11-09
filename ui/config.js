@@ -1,4 +1,4 @@
-const DEPLOY_URL = "http://YOUR_DNS_NAME";
+const DEPLOY_URL = "http://caseya.moraviancs.click";
 
 const API_BASE =
   location.hostname === "127.0.0.1" || location.hostname === "localhost"
